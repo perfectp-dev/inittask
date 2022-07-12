@@ -1,0 +1,1 @@
+chmod 777 src/runtime src/web/assets
