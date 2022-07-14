@@ -50,7 +50,20 @@ $config = [
             'rules' => [
             ],
         ],
-
+        'i18n' => [
+            'translations' => [
+                'orders' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en-US',
+                ],
+            ],
+        ],
+    ],
+    'modules' => [
+        'orders' => [
+            'class' => 'app\modules\orders\Module',
+        ],
     ],
     'params' => $params,
 ];
