@@ -86,6 +86,11 @@ class Orders extends \yii\db\ActiveRecord
         return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
+    public function getUserFullName()
+    {
+        return $this->user->first_name . ' ' . $this->user->last_name;
+    }
+
     public function getModeName()
     {
         return self::$modesDictionary[$this->mode] ?: Yii::t('orders', 'Unknown');

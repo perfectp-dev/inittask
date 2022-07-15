@@ -65,7 +65,7 @@ $this->title = Yii::t('orders', 'Orders');
             [
                 'attribute' => 'user_id',
                 'value' => function ($model) {
-                    return $model->user->first_name . ' ' . $model->user->last_name;
+                    return $model->userFullName;
                 },
             ],
 
@@ -110,8 +110,12 @@ $this->title = Yii::t('orders', 'Orders');
     ]); ?>
 
 <div class="row">
-    <div class="col-sm-4 pull-right">
-        <?= Html::a(Yii::t('orders', 'Save result'), ['save']) ?>
+    <div class="col text-right">
+        <?= Html::a(
+            '<i class="glyphicon glyphicon-download"></i> ' . Yii::t('orders', 'Save result'),
+            array_merge(['save'], Yii::$app->request->queryParams),
+            ['class' => 'btn btn-default'])
+        ?>
     </div>
 </div>
 </div>
