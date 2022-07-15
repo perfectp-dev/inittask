@@ -4,18 +4,21 @@ namespace app\modules\orders\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\orders\models\Orders;
 use yii\helpers\ArrayHelper;
-use yii\helpers\VarDumper;
 
 /**
- * OrderSearch represents the model behind the search form of `app\modules\orders\models\Orders`.
+ * OrderSearch - orders list with filters
  */
 class OrderSearch extends Orders
 {
 
-    public $search;
     public $search_type;
+    public $search;
+
+    // Search types
+    const BY_ORDER_ID = 0;
+    const BY_LINK = 1;
+    const BY_USERNAME = 2;
 
     /**
      * {@inheritdoc}
@@ -29,9 +32,11 @@ class OrderSearch extends Orders
             [['mode'], 'in', 'range' => [0, 1, 2]],
             [['search'], 'safe'],
             [['search_type'], 'integer'],
+            [['search_type'], 'in', 'range' => [self::BY_ORDER_ID, self::BY_LINK, self::BY_USERNAME]],
         ];
     }
 
+    //Normalize GET params name
     public function formName()
     {
         return '';
@@ -57,8 +62,6 @@ class OrderSearch extends Orders
     {
         $query = Orders::find()->orderBy('id DESC');
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => false,
@@ -67,48 +70,41 @@ class OrderSearch extends Orders
         $this->load($params, '');
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
             $query->where('0=1');
             return $dataProvider;
         }
 
-        // Status, service & mode filters
+        // Filter by status, service & mode
         $query->andFilterWhere([
             'status' => $this->status,
             'service_id' => $this->service_id,
             'mode' => $this->mode,
         ]);
 
-        // Search
-        if (isset($this->search_type)) {
+        // Search filters
+        if (isset($this->search_type) && isset($this->search)) {
 
             switch ($this->search_type) {
 
-                case 0:
-                    // by Order ID
+                case self::BY_ORDER_ID:
                     $query->andFilterWhere(['id' => (int)$this->search]);
                     break;
 
-                case 1:
-                    // by Link
+                case self::BY_LINK:
                     $query->andFilterWhere(['like', 'link', $this->search]);
                     break;
 
-                case 2:
-
+                case self::BY_USERNAME:
                     $user_ids = ArrayHelper::getColumn(
-                        Users::find()->where(['like', 'CONCAT(first_name, " ", last_name)', $this->search])
+                        Users::find()
                             ->select('id')
+                            ->where(['like', 'CONCAT(first_name, " ", last_name)', $this->search])
                             ->asArray()
                             ->all(),
-                        'id');
-//
+                        'id'
+                    );
 
-                    if (empty($user_ids)) {
-                        $query->where('0=1');
-                    } else {
-                        $query->andFilterWhere(['user_id' => $user_ids]);
-                    }
+                    $query->andWhere(['user_id' => $user_ids]);
                     break;
             }
         }

@@ -7,8 +7,6 @@ use yii\widgets\ActiveForm;
 /* @var $model app\modules\orders\models\OrderSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<ul class="nav nav-tabs p-b">
-    <?= $this->render('_status', ['model' => $model]) ?>
 
     <li class="pull-right custom-search">
 
@@ -39,4 +37,3 @@ use yii\widgets\ActiveForm;
 
         <?php ActiveForm::end(); ?>
     </li>
-</ul>

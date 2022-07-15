@@ -12,6 +12,9 @@ use Yii;
  */
 class Services extends \yii\db\ActiveRecord
 {
+
+    public $orders_cnt;
+
     /**
      * {@inheritdoc}
      */
@@ -40,6 +43,11 @@ class Services extends \yii\db\ActiveRecord
             'id' => Yii::t('orders', 'ID'),
             'name' => Yii::t('orders', 'Name'),
         ];
+    }
+
+    public function getOrders()
+    {
+        return $this->hasMany(Orders::className(), ['service_id' => 'id']);
     }
 
     public function getOrdersCount()

@@ -18,9 +18,26 @@ use Yii;
  */
 class Orders extends \yii\db\ActiveRecord
 {
+    public static $modesDictionary;
+    public static $statusesDictionary;
 
-    const modes = [0 => 'Manual', 1 => 'Auto'];
-    const statuses = [0 => 'Pending', 1 => 'In progress', 2 => 'Completed', 3 => 'Canceled', 4 => 'Error'];
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+
+        self::$modesDictionary = [
+            0 => Yii::t('orders', 'Manual'),
+            1 => Yii::t('orders', 'Auto')
+        ];
+
+        self::$statusesDictionary = [
+            0 => Yii::t('orders', 'Pending'),
+            1 => Yii::t('orders', 'In progress'),
+            2 => Yii::t('orders', 'Completed'),
+            3 => Yii::t('orders', 'Canceled'),
+            4 => Yii::t('orders', 'Error'),
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -71,11 +88,11 @@ class Orders extends \yii\db\ActiveRecord
 
     public function getModeName()
     {
-        return self::modes[$this->mode] ?: Yii::t('orders', 'Unknown');
+        return self::$modesDictionary[$this->mode] ?: Yii::t('orders', 'Unknown');
     }
 
     public function getStatusName()
     {
-        return self::statuses[$this->status] ?: Yii::t('orders', 'Unknown');
+        return self::$statusesDictionary[$this->status] ?: Yii::t('orders', 'Unknown');
     }
 }

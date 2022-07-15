@@ -2,86 +2,76 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use app\modules\orders\models\Orders;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\orders\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $statuses array */
+/* @var $allOrdersCount int */
 /* @var $services array */
+/* @var $modes array */
+/* @var $pageSize int */
+
 
 $this->title = Yii::t('orders', 'Orders');
+
 ?>
 <div class="orders-index">
+    <ul class="nav nav-tabs p-b">
+        <?= $this->render('_status', [
+            'model' => $searchModel,
+            'statuses' => $statuses,
+        ]) ?>
+        <?= $this->render('_search', ['model' => $searchModel]); ?>
+    </ul>
 
-    <?= $this->render('_search', ['model' => $searchModel]); ?>
+    <?php $servicesWidget = $this->render('_services', [
+        'model' => $searchModel,
+        'services' => $services,
+        'allOrdersCount' => $allOrdersCount,
+    ]); ?>
 
-    <?php
-    // Сервисы
-    $servicesItems = [
-        [
-            'label' => Yii::t('orders', 'All'),
-            'url' => [
-                'index',
-                'status' => $searchModel->status,
-                'search_type' => $searchModel->search_type,
-                'search' => $searchModel->search,
-            ],
-        ],
-    ];
-    foreach ($services as $service) {
-        $servicesItems[] = [
-            'label' => $service['name'],
-            'url' => [
-                'index',
-                'status' => $searchModel->status,
-                'search_type' => $searchModel->search_type,
-                'search' => $searchModel->search,
-                'service_id' => $service['id'],
-            ]
-        ];
-    }
-
-    $servicesWidget = '';/*ButtonDropdown::widget([
-            'label' => ' Service <span class="caret"></span>',
-            'encodeLabel' => false,
-            'buttonOptions' => ['class' => 'btn-th btn-default'],
-            'dropdown' => [
-                'items' => $servicesItems,
-            ],
-    ]);*/ ?>
-
-    <?php
-    // Режимы (Mode)
-    $modesWidget = '';/*ButtonDropdown::widget([
-        'label' => ' Mode <span class="caret"></span>',
-        'encodeLabel' => false,
-        'buttonOptions' => ['class' => 'btn-th btn-default'],
-        'dropdown' => [
-            'items' => [
-                ['label'=>'All', 'url'=>''],
-                ['label'=>'Manual', 'url'=>''],
-                ['label'=>'Auto', 'url'=>''],
-            ]
-        ],
-    ])*/ ?>
+    <?php $modesWidget = $this->render('_modes', [
+        'model' => $searchModel,
+        'modes' => $modes,
+    ]); ?>
 
     <?= GridView::widget([
+
         'dataProvider' => $dataProvider,
-//        'filterModel' => $searchModel,
+
         'tableOptions' => [
             'class' => 'table order-table'
         ],
-        'layout' => "{items}\n{pager} {summary}",
+
+        'layout' => "{items}
+            <div class='row'>
+                <div class='col-sm-8'>{pager}</div>
+                <div class='col-sm-4 pagination-counters'>{summary}</div>
+            </div>",
+
+        'summary' => $dataProvider->getTotalCount() > $pageSize ?
+            (
+                "{begin} " . Yii::t('orders', 'to') . " {end} " .
+                Yii::t('orders', 'of') . " {totalCount}"
+            ) : "{totalCount}"
+
+        ,
+
         'columns' => [
+
             'id',
+
             [
                 'attribute' => 'user_id',
                 'value' => function ($model) {
                     return $model->user->first_name . ' ' . $model->user->last_name;
                 },
             ],
+
             'link',
             'quantity',
+
             [
                 'attribute' => 'service_id',
                 'header' => $servicesWidget,
@@ -91,12 +81,14 @@ $this->title = Yii::t('orders', 'Orders');
                 },
                 'format' => 'html',
             ],
+
             [
                 'attribute' => 'status',
                 'value' => function ($model) {
                     return $model->statusName;
                 },
             ],
+
             [
                 'attribute' => 'mode',
                 'header' => $modesWidget,
@@ -105,6 +97,7 @@ $this->title = Yii::t('orders', 'Orders');
                     return $model->modeName;
                 },
             ],
+
             [
                 'attribute' => 'created_at',
                 'format' => 'html',
@@ -116,5 +109,9 @@ $this->title = Yii::t('orders', 'Orders');
         ],
     ]); ?>
 
-
+<div class="row">
+    <div class="col-sm-4 pull-right">
+        <?= Html::a(Yii::t('orders', 'Save result'), ['save']) ?>
+    </div>
+</div>
 </div>

@@ -4,17 +4,19 @@ namespace app\modules\orders\controllers;
 
 use app\modules\orders\models\OrderSearch;
 use app\modules\orders\models\Services;
+use app\modules\orders\models\Orders;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
 
 /**
- * OrderController implements the CRUD actions for Orders model.
+ * DefaultController - .
  */
 class DefaultController extends Controller
 {
 
+    const PAGE_SIZE = 100;
+
     /**
-     * Lists all Orders models.
+     * Lists Orders.
      *
      * @return string
      */
@@ -23,14 +25,23 @@ class DefaultController extends Controller
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-        $services = Services::find()->orderBy('name')->asArray()->all();
+        $dataProvider->pagination->pageSize = self::PAGE_SIZE;
 
-        $dataProvider->pagination->pageSize = 4;
+        $services = Services::find()->alias('s')
+            ->select(['s.id', 's.name', 'COUNT(orders.id) AS orders_cnt'])
+            ->joinWith('orders', false)
+            ->groupBy('s.id')
+            ->orderBy(['COUNT(orders.id)' => SORT_DESC])
+            ->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'statuses' => Orders::$statusesDictionary,
+            'allOrdersCount' => Orders::find()->count(),
             'services' => $services,
+            'modes' => Orders::$modesDictionary,
+            'pageSize' => self::PAGE_SIZE,
         ]);
     }
 }
