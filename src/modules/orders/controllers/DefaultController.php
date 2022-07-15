@@ -48,8 +48,6 @@ class DefaultController extends Controller
 
     /**
      * Save Orders List.
-     *
-     * @return string
      */
     public function actionSave()
     {

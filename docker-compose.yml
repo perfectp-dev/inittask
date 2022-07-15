@@ -23,40 +23,41 @@ services:
 
     php:
         build: .
-        image: php8:test_for_pp
+        image: php8:inittask_for_pp
 
         environment:
             TZ: Europe/Moscow
-            MYSQL_DATABASE: ${COMPOSE_PROJECT_NAME}-db
-            MYSQL_USER: appuser
-            MYSQL_PASSWORD: Ga8MnU6D65
+            MYSQL_DATABASE: &database ${DB_DATABASE}
+            MYSQL_USER: &user ${DB_USER}
+            MYSQL_PASSWORD: &password ${DB_PASSWORD}
         volumes:
             - ./src:/var/www
+            - ./src-db:/db
         container_name: ${COMPOSE_PROJECT_NAME}-php
         restart: always
 
     db:
         image: mysql:8.0
-        container_name: ${COMPOSE_PROJECT_NAME}-db
+        container_name: *database
         expose:
             -   "3306"
         environment:
             TZ: Europe/Moscow
-            MYSQL_ROOT_PASSWORD: 9B9weD3SSse232
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
             MYSQL_DATABASE: ${COMPOSE_PROJECT_NAME}-db
-            MYSQL_USER: appuser
-            MYSQL_PASSWORD: Ga8MnU6D65
+            MYSQL_USER: *user
+            MYSQL_PASSWORD: *password
 
         volumes:
             - ./db-data:/var/lib/mysql
         restart: always
 
-    pma:
-        image: phpmyadmin
-        container_name: pma
-        ports:
-            - 8085:80
-        environment:
-            - PMA_ARBITRARY=1
-            - UPLOAD_LIMIT=300M
-        restart: always
+#    pma:
+#        image: phpmyadmin
+#        container_name: pma
+#        ports:
+#            - 8085:80
+#        environment:
+#            - PMA_ARBITRARY=1
+#            - UPLOAD_LIMIT=300M
+#        restart: always
