@@ -29,8 +29,14 @@ class OrderSearch extends Orders
         return [
             [['id', 'user_id', 'quantity', 'service_id', 'status', 'created_at', 'mode'], 'integer'],
             [['link'], 'safe'],
-            [['status'], 'in', 'range' => [0, 1, 2, 3, 4]],
-            [['mode'], 'in', 'range' => [0, 1, 2]],
+            [['status'], 'in', 'range' => [
+                self::STATUS_PENDING,
+                self::STATUS_IN_PROGRESS,
+                self::STATUS_COMPLETED,
+                self::STATUS_CANCELED,
+                self::STATUS_ERROR
+            ]],
+            [['mode'], 'in', 'range' => [self::MODE_MANUAL, self::MODE_AUTO]],
             [['search'], 'safe'],
             [['search_type'], 'integer'],
             [['search_type'], 'in', 'range' => [self::BY_ORDER_ID, self::BY_LINK, self::BY_USERNAME]],
@@ -54,7 +60,6 @@ class OrderSearch extends Orders
 
     /**
      * Creates data provider instance with search query applied
-     *
      * @return ActiveDataProvider
      */
     public function search()
@@ -104,6 +109,10 @@ class OrderSearch extends Orders
         return $dataProvider;
     }
 
+    /**
+     * Total Orders Counter
+     * @return int
+     */
     public static function allCount()
     {
         return Orders::find()->count();

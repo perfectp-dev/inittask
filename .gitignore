@@ -1,2 +1,4 @@
 /.env
 In
+# phpstorm project files
+.idea

@@ -27,19 +27,4 @@ class m220715_130704_insert_data extends Migration
 
         return false;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m220715_130704_insert_data cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

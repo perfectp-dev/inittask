@@ -3,22 +3,22 @@
 namespace app\modules\orders\controllers;
 
 use Yii;
+use yii\web\Controller;
+use yii\web\HttpException;
 use app\modules\orders\models\OrderSearch;
 use app\modules\orders\models\ServiceSearch;
-use yii\web\Controller;
 
 /**
  * DefaultController - .
  */
 class OrdersController extends Controller
 {
-
     const PAGE_SIZE = 100;
 
     /**
      * Lists Orders.
-     *
      * @return string
+     * @throws HttpException if search parameters not valid
      */
     public function actionIndex()
     {
@@ -27,7 +27,7 @@ class OrdersController extends Controller
         $searchModel->load($this->request->queryParams, '');
 
         if (!$searchModel->validate()) {
-            throw new \yii\web\HttpException(404, Yii::t('orders', 'Invalid parameters'));
+            throw new HttpException(404, Yii::t('orders', 'Invalid parameters'));
         }
 
         $dataProvider = $searchModel->search();
@@ -50,6 +50,7 @@ class OrdersController extends Controller
 
     /**
      * Save Orders List.
+     * @throws HttpException if search parameters not valid
      */
     public function actionSave()
     {
@@ -60,7 +61,7 @@ class OrdersController extends Controller
         $searchModel->load($this->request->queryParams, '');
 
         if (!$searchModel->validate()) {
-            throw new \yii\web\HttpException(404, Yii::t('orders', 'Invalid parameters'));
+            throw new HttpException(404, Yii::t('orders', 'Invalid parameters'));
         }
 
         $dataProvider = $searchModel->search();

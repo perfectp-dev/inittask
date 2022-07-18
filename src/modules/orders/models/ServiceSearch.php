@@ -2,8 +2,17 @@
 
 namespace app\modules\orders\models;
 
+use yii\db\ActiveRecord;
+
+/**
+ * ServiceSearch
+ */
 class ServiceSearch extends Services
 {
+    /**
+     * Services with orders counters
+     * @return array|ActiveRecord[]
+     */
     public static function listWithOrdersCounters()
     {
         return Services::find()->alias('s')

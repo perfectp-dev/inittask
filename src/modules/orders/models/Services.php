@@ -3,6 +3,8 @@
 namespace app\modules\orders\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "services".
@@ -10,9 +12,8 @@ use Yii;
  * @property int $id
  * @property string $name
  */
-class Services extends \yii\db\ActiveRecord
+class Services extends ActiveRecord
 {
-
     public $orders_cnt;
 
     /**
@@ -45,13 +46,21 @@ class Services extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * Related orders
+     * @return ActiveQuery
+     */
     public function getOrders()
     {
-        return $this->hasMany(Orders::className(), ['service_id' => 'id']);
+        return $this->hasMany(Orders::class, ['service_id' => 'id']);
     }
 
+    /**
+     * Related orders counter
+     * @return int
+     */
     public function getOrdersCount()
     {
-        return $this->hasMany(Orders::className(), ['service_id' => 'id'])->count();
+        return $this->hasMany(Orders::class, ['service_id' => 'id'])->count();
     }
 }
