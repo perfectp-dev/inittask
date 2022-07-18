@@ -2,6 +2,7 @@
 
 namespace app\modules\orders\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -54,11 +55,9 @@ class OrderSearch extends Orders
     /**
      * Creates data provider instance with search query applied
      *
-     * @param array $params
-     *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search()
     {
         $query = Orders::find()->orderBy('id DESC');
 
@@ -66,13 +65,6 @@ class OrderSearch extends Orders
             'query' => $query,
             'sort' => false,
         ]);
-
-        $this->load($params, '');
-
-        if (!$this->validate()) {
-            $query->where('0=1');
-            return $dataProvider;
-        }
 
         // Filter by status, service & mode
         $query->andFilterWhere([
@@ -110,5 +102,10 @@ class OrderSearch extends Orders
         }
 
         return $dataProvider;
+    }
+
+    public static function allCount()
+    {
+        return Orders::find()->count();
     }
 }

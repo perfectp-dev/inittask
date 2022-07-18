@@ -31,7 +31,7 @@ foreach ($modes as $modeID => $mode) {
 ?>
 
 <?= ButtonDropdown::widget([
-    'label' => 'Mode' . (isset($model->mode) ? (': ' . $modes[$model->mode]) : ''),
+    'label' => Yii::t('orders', 'Mode') . (isset($model->mode) ? (': ' . $modes[$model->mode]) : ''),
     'encodeLabel' => false,
     'options' => ['class' => 'btn-th btn-default'],
     'dropdown' => [

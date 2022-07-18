@@ -4,14 +4,13 @@ namespace app\modules\orders\controllers;
 
 use Yii;
 use app\modules\orders\models\OrderSearch;
-use app\modules\orders\models\Services;
-use app\modules\orders\models\Orders;
+use app\modules\orders\models\ServiceSearch;
 use yii\web\Controller;
 
 /**
  * DefaultController - .
  */
-class DefaultController extends Controller
+class OrdersController extends Controller
 {
 
     const PAGE_SIZE = 100;
@@ -24,24 +23,27 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         $searchModel = new OrderSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        $searchModel->load($this->request->queryParams, '');
+
+        if (!$searchModel->validate()) {
+            throw new \yii\web\HttpException(404, Yii::t('orders', 'Invalid parameters'));
+        }
+
+        $dataProvider = $searchModel->search();
 
         $dataProvider->pagination->pageSize = self::PAGE_SIZE;
 
-        $services = Services::find()->alias('s')
-            ->select(['s.id', 's.name', 'COUNT(orders.id) AS orders_cnt'])
-            ->joinWith('orders', false)
-            ->groupBy('s.id')
-            ->orderBy(['COUNT(orders.id)' => SORT_DESC])
-            ->all();
+        $services = ServiceSearch::listWithOrdersCounters();
 
         return $this->render('index', [
+            'title' => Yii::t('orders', 'Orders'),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'statuses' => Orders::$statusesDictionary,
-            'allOrdersCount' => Orders::find()->count(),
+            'statuses' => OrderSearch::$statusesDictionary,
+            'allOrdersCount' => OrderSearch::allCount(),
             'services' => $services,
-            'modes' => Orders::$modesDictionary,
+            'modes' => OrderSearch::$modesDictionary,
             'pageSize' => self::PAGE_SIZE,
         ]);
     }
@@ -54,7 +56,15 @@ class DefaultController extends Controller
         ini_set('memory_limit', '1024M');
 
         $searchModel = new OrderSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        $searchModel->load($this->request->queryParams, '');
+
+        if (!$searchModel->validate()) {
+            throw new \yii\web\HttpException(404, Yii::t('orders', 'Invalid parameters'));
+        }
+
+        $dataProvider = $searchModel->search();
+
         $dataProvider->pagination = false;
 
         $data = implode(';', $searchModel->attributeLabels()) . "\r\n";

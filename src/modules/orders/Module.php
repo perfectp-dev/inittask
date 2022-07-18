@@ -11,6 +11,7 @@ class Module extends \yii\base\Module
      * {@inheritdoc}
      */
     public $controllerNamespace = 'app\modules\orders\controllers';
+    public $defaultRoute = 'orders/index';
 
     /**
      * {@inheritdoc}
