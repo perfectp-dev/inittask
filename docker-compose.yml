@@ -54,12 +54,12 @@ services:
             - ./db-data:/var/lib/mysql
         restart: always
 
-    pma:
-        image: phpmyadmin
-        container_name: pma
-        ports:
-            - 8085:80
-        environment:
-            - PMA_ARBITRARY=1
-            - UPLOAD_LIMIT=300M
-        restart: always
+#    pma:
+#        image: phpmyadmin
+#        container_name: pma
+#        ports:
+#            - 8085:80
+#        environment:
+#            - PMA_ARBITRARY=1
+#            - UPLOAD_LIMIT=300M
+#        restart: always
