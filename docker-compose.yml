@@ -27,9 +27,11 @@ services:
 
         environment:
             TZ: Europe/Moscow
+            MYSQL_HOST: &dbhost ${COMPOSE_PROJECT_NAME}-db
             MYSQL_DATABASE: &database ${DB_DATABASE}
             MYSQL_USER: &user ${DB_USER}
             MYSQL_PASSWORD: &password ${DB_PASSWORD}
+            DEBUG: ${DEBUG}
         volumes:
             - ./src:/var/www
             - ./src-db:/db
@@ -38,13 +40,13 @@ services:
 
     db:
         image: mysql:8.0
-        container_name: *database
+        container_name: *dbhost
         expose:
             -   "3306"
         environment:
             TZ: Europe/Moscow
             MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${COMPOSE_PROJECT_NAME}-db
+            MYSQL_DATABASE: *database
             MYSQL_USER: *user
             MYSQL_PASSWORD: *password
 
@@ -52,12 +54,12 @@ services:
             - ./db-data:/var/lib/mysql
         restart: always
 
-#    pma:
-#        image: phpmyadmin
-#        container_name: pma
-#        ports:
-#            - 8085:80
-#        environment:
-#            - PMA_ARBITRARY=1
-#            - UPLOAD_LIMIT=300M
-#        restart: always
+    pma:
+        image: phpmyadmin
+        container_name: pma
+        ports:
+            - 8085:80
+        environment:
+            - PMA_ARBITRARY=1
+            - UPLOAD_LIMIT=300M
+        restart: always
