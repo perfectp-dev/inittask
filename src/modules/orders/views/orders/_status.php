@@ -14,11 +14,11 @@ $baseLink = [
 ?>
 
     <li<?= (!isset($model->status) ? ' class="active"' : '') ?>>
-        <?= Html::a(Yii::t('orders', 'All orders'), $baseLink) ?>
+        <?= Html::a(Yii::t('orders', 'search.status.all'), $baseLink) ?>
     </li>
 
-<?php foreach ($statuses as $statusID => $status) { ?>
+<?php foreach ($statuses as $statusID => $status): ?>
     <li<?= (isset($model->status) && $model->status == $statusID ? ' class="active"' : '') ?>>
         <?= Html::a($status, array_merge($baseLink, ['status' => $statusID])) ?>
     </li>
-<?php } ?>
+<?php endforeach; ?>

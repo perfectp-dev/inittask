@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
+/* @var $title string */
 /* @var $searchModel app\modules\orders\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $statuses array */
@@ -11,9 +12,10 @@ use yii\grid\GridView;
 /* @var $services array */
 /* @var $modes array */
 /* @var $pageSize int */
+/* @var $saveURL array*/
 
 
-$this->title = Yii::t('orders', 'Orders');
+$this->title = $title;
 
 ?>
 <div class="orders-index">
@@ -50,10 +52,10 @@ $this->title = Yii::t('orders', 'Orders');
                 <div class='col-sm-4 pagination-counters'>{summary}</div>
             </div>",
 
-        'summary' => $dataProvider->getTotalCount() > $pageSize ?
+        'summary' => $dataProvider->getTotalCount() > $dataProvider->pagination->pageSize ?
             (
-                "{begin} " . Yii::t('orders', 'to') . " {end} " .
-                Yii::t('orders', 'of') . " {totalCount}"
+                "{begin} " . Yii::t('orders', 'search.summary.to') . " {end} " .
+                Yii::t('orders', 'search.summary.of') . " {totalCount}"
             ) : "{totalCount}"
 
         ,
@@ -102,8 +104,8 @@ $this->title = Yii::t('orders', 'Orders');
                 'attribute' => 'created_at',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return '<span class="nowrap">' . Yii::$app->formatter->asDateTime($model->created_at, 'php:Y-m-d') . '</span>' .
-                        '<span class="nowrap">' . Yii::$app->formatter->asDateTime($model->created_at, 'php:H:i:s') . '</span>';
+                    return '<span class="nowrap">' . $model->createdDateOnly . '</span>' .
+                        '<span class="nowrap">' . $model->createdTimeOnly . '</span>';
                 },
             ],
         ],
@@ -112,10 +114,10 @@ $this->title = Yii::t('orders', 'Orders');
 <div class="row">
     <div class="col text-right">
         <?= Html::a(
-            '<i class="glyphicon glyphicon-download"></i> ' . Yii::t('orders', 'Save result'),
-            array_merge(['save'], Yii::$app->request->queryParams),
-            ['class' => 'btn btn-default'])
-        ?>
+            '<i class="glyphicon glyphicon-download"></i> ' . Yii::t('orders', 'search.savebtn'),
+            $saveURL,
+            ['class' => 'btn btn-default']
+        )?>
     </div>
 </div>
 </div>

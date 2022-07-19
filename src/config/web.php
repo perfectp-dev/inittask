@@ -50,6 +50,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 'orders/index' => 'orders/orders/index',
+                'orders/save' => 'orders/orders/save',
             ],
         ],
         'i18n' => [

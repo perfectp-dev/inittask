@@ -17,7 +17,7 @@ $baseLink = [
 ];
 
 $modesItems = [
-    ['label' => Yii::t('orders', 'All'),
+    ['label' => Yii::t('orders', 'search.mode.all'),
         'url' => $baseLink,
     ]
 ];
@@ -31,7 +31,7 @@ foreach ($modes as $modeID => $mode) {
 ?>
 
 <?= ButtonDropdown::widget([
-    'label' => Yii::t('orders', 'Mode') . (isset($model->mode) ? (': ' . $modes[$model->mode]) : ''),
+    'label' => Yii::t('orders', 'search.column.mode') . (isset($model->mode) ? (': ' . $modes[$model->mode]) : ''),
     'encodeLabel' => false,
     'options' => ['class' => 'btn-th btn-default'],
     'dropdown' => [

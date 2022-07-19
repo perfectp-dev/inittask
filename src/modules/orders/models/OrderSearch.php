@@ -21,6 +21,8 @@ class OrderSearch extends Orders
     const BY_LINK = 1;
     const BY_USERNAME = 2;
 
+    const PAGE_SIZE = 100;
+
     /**
      * {@inheritdoc}
      */
@@ -64,11 +66,14 @@ class OrderSearch extends Orders
      */
     public function search()
     {
-        $query = Orders::find()->orderBy('id DESC');
+        $query = self::find()->orderBy('id DESC');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => false,
+            'pagination' => [
+                'pageSize' => self::PAGE_SIZE,
+            ],
         ]);
 
         // Filter by status, service & mode
@@ -116,5 +121,43 @@ class OrderSearch extends Orders
     public static function allCount()
     {
         return Orders::find()->count();
+    }
+
+    /**
+     * Date of created_at
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getCreatedDateOnly()
+    {
+        return Yii::$app->formatter->asDateTime($this->created_at, 'php:Y-m-d');
+    }
+
+    /**
+     * Time of created_at
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getCreatedTimeOnly()
+    {
+        return Yii::$app->formatter->asDateTime($this->created_at, 'php:H:i:s');
+    }
+
+    /**
+     * Related user
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * Full username of related user
+     * @return string
+     */
+    public function getUserFullName()
+    {
+        return $this->user->first_name . ' ' . $this->user->last_name;
     }
 }

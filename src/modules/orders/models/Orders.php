@@ -40,16 +40,16 @@ class Orders extends ActiveRecord
         parent::__construct($config);
 
         self::$modesDictionary = [
-            self::MODE_MANUAL => Yii::t('orders', 'Manual'),
-            self::MODE_AUTO => Yii::t('orders', 'Auto')
+            self::MODE_MANUAL => Yii::t('orders', 'search.mode.manual'),
+            self::MODE_AUTO => Yii::t('orders', 'search.mode.auto')
         ];
 
         self::$statusesDictionary = [
-            self::STATUS_PENDING => Yii::t('orders', 'Pending'),
-            self::STATUS_IN_PROGRESS => Yii::t('orders', 'In progress'),
-            self::STATUS_COMPLETED => Yii::t('orders', 'Completed'),
-            self::STATUS_CANCELED => Yii::t('orders', 'Canceled'),
-            self::STATUS_ERROR => Yii::t('orders', 'Error'),
+            self::STATUS_PENDING => Yii::t('orders', 'search.status.pending'),
+            self::STATUS_IN_PROGRESS => Yii::t('orders', 'search.status.inprogress'),
+            self::STATUS_COMPLETED => Yii::t('orders', 'search.status.completed'),
+            self::STATUS_CANCELED => Yii::t('orders', 'search.status.canceled'),
+            self::STATUS_ERROR => Yii::t('orders', 'search.status.error'),
         ];
     }
 
@@ -79,14 +79,14 @@ class Orders extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('orders', 'ID'),
-            'user_id' => Yii::t('orders', 'User'),
-            'link' => Yii::t('orders', 'Link'),
-            'quantity' => Yii::t('orders', 'Quantity'),
-            'service_id' => Yii::t('orders', 'Service'),
-            'status' => Yii::t('orders', 'Status'),
-            'mode' => Yii::t('orders', 'Mode'),
-            'created_at' => Yii::t('orders', 'Created'),
+            'id' => Yii::t('orders', 'search.column.id'),
+            'user_id' => Yii::t('orders', 'search.column.user'),
+            'link' => Yii::t('orders', 'search.column.link'),
+            'quantity' => Yii::t('orders', 'search.column.quantity'),
+            'service_id' => Yii::t('orders', 'search.column.service'),
+            'status' => Yii::t('orders', 'search.column.status'),
+            'mode' => Yii::t('orders', 'search.column.mode'),
+            'created_at' => Yii::t('orders', 'search.column.created'),
         ];
     }
 
@@ -100,30 +100,12 @@ class Orders extends ActiveRecord
     }
 
     /**
-     * Related user
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(Users::class, ['id' => 'user_id']);
-    }
-
-    /**
-     * Full username of related user
-     * @return string
-     */
-    public function getUserFullName()
-    {
-        return $this->user->first_name . ' ' . $this->user->last_name;
-    }
-
-    /**
      * Modes name from dictionary
      * @return string
      */
     public function getModeName()
     {
-        return self::$modesDictionary[$this->mode] ?: Yii::t('orders', 'Unknown');
+        return self::$modesDictionary[$this->mode] ?: Yii::t('orders', 'search.mode.unknown');
     }
 
     /**
@@ -132,6 +114,6 @@ class Orders extends ActiveRecord
      */
     public function getStatusName()
     {
-        return self::$statusesDictionary[$this->status] ?: Yii::t('orders', 'Unknown');
+        return self::$statusesDictionary[$this->status] ?: Yii::t('orders', 'search.status.unknown');
     }
 }

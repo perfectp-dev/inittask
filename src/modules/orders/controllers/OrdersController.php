@@ -13,8 +13,6 @@ use app\modules\orders\models\ServiceSearch;
  */
 class OrdersController extends Controller
 {
-    const PAGE_SIZE = 100;
-
     /**
      * Lists Orders.
      * @return string
@@ -27,24 +25,20 @@ class OrdersController extends Controller
         $searchModel->load($this->request->queryParams, '');
 
         if (!$searchModel->validate()) {
-            throw new HttpException(404, Yii::t('orders', 'Invalid parameters'));
+            $searchModel = new OrderSearch();
         }
 
         $dataProvider = $searchModel->search();
 
-        $dataProvider->pagination->pageSize = self::PAGE_SIZE;
-
-        $services = ServiceSearch::listWithOrdersCounters();
-
         return $this->render('index', [
-            'title' => Yii::t('orders', 'Orders'),
+            'title' => Yii::t('orders', 'page.orders'),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'statuses' => OrderSearch::$statusesDictionary,
             'allOrdersCount' => OrderSearch::allCount(),
-            'services' => $services,
+            'services' => ServiceSearch::listWithOrdersCounters(),
             'modes' => OrderSearch::$modesDictionary,
-            'pageSize' => self::PAGE_SIZE,
+            'saveURL' => array_merge(['save'], Yii::$app->request->queryParams),
         ]);
     }
 
@@ -61,7 +55,7 @@ class OrdersController extends Controller
         $searchModel->load($this->request->queryParams, '');
 
         if (!$searchModel->validate()) {
-            throw new HttpException(404, Yii::t('orders', 'Invalid parameters'));
+            $searchModel = new OrderSearch();
         }
 
         $dataProvider = $searchModel->search();

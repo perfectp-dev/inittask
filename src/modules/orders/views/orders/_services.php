@@ -33,7 +33,7 @@ foreach ($services as $service) {
 }
 ?>
 <?= ButtonDropdown::widget([
-    'label' => Yii::t('orders', 'Service') . (isset($model->service_id) ? (': ' . $model->service->name) : ''),
+    'label' => Yii::t('orders', 'search.column.service') . (isset($model->service_id) ? (': ' . $model->service->name) : ''),
     'options' => ['class' => 'btn-th btn-default'],
     'dropdown' => [
         'items' => $servicesItems,

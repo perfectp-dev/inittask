@@ -38,9 +38,9 @@ class Users extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('orders', 'ID'),
-            'first_name' => Yii::t('orders', 'First Name'),
-            'last_name' => Yii::t('orders', 'Last Name'),
+            'id' => 'ID',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
         ];
     }
 }
