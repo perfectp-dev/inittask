@@ -67,7 +67,7 @@ $this->title = $title;
             [
                 'attribute' => 'user_id',
                 'value' => function ($model) {
-                    return $model->userFullName;
+                    return $model->user_full_name;
                 },
             ],
 
@@ -79,7 +79,7 @@ $this->title = $title;
                 'header' => $servicesWidget,
                 'headerOptions' => ['class' => 'dropdown-th'],
                 'value' => function ($model) {
-                    return '<span class="label-id">' . $model->service->ordersCount . '</span> ' . $model->service->name;
+                    return '<span class="label-id">' . $model->service_orders_cnt . '</span> ' . $model->service_name;
                 },
                 'format' => 'html',
             ],

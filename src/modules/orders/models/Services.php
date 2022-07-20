@@ -54,13 +54,4 @@ class Services extends ActiveRecord
     {
         return $this->hasMany(Orders::class, ['service_id' => 'id']);
     }
-
-    /**
-     * Related orders counter
-     * @return int
-     */
-    public function getOrdersCount()
-    {
-        return $this->hasMany(Orders::class, ['service_id' => 'id'])->count();
-    }
 }

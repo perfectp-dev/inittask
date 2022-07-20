@@ -27,8 +27,8 @@ $servicesItems = [
 
 foreach ($services as $service) {
     $servicesItems[] = [
-        'label' => '<span class="label-id">' . $service['orders_cnt'] . '</span> ' . $service['name'],
-        'url' => array_merge($baseLink, ['service_id' => $service['id']])
+        'label' => '<span class="label-id">' . $service['orders_cnt'] . '</span> ' . $service['service_name'],
+        'url' => array_merge($baseLink, ['service_id' => $service['service_id']])
     ];
 }
 ?>

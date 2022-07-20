@@ -31,20 +31,17 @@ class Orders extends ActiveRecord
     const STATUS_CANCELED = 3;
     const STATUS_ERROR = 4;
 
-    /**
-     * Constructor. Initialize modes and statuses dictionaries
-     * @param $config
-     */
-    public function __construct($config = [])
+    public function getModes()
     {
-        parent::__construct($config);
-
-        self::$modesDictionary = [
+        return [
             self::MODE_MANUAL => Yii::t('orders', 'search.mode.manual'),
             self::MODE_AUTO => Yii::t('orders', 'search.mode.auto')
         ];
+    }
 
-        self::$statusesDictionary = [
+    public function getStatuses()
+    {
+        return [
             self::STATUS_PENDING => Yii::t('orders', 'search.status.pending'),
             self::STATUS_IN_PROGRESS => Yii::t('orders', 'search.status.inprogress'),
             self::STATUS_COMPLETED => Yii::t('orders', 'search.status.completed'),
@@ -88,32 +85,5 @@ class Orders extends ActiveRecord
             'mode' => Yii::t('orders', 'search.column.mode'),
             'created_at' => Yii::t('orders', 'search.column.created'),
         ];
-    }
-
-    /**
-     * Related Service
-     * @return \yii\db\ActiveQuery
-     */
-    public function getService()
-    {
-        return $this->hasOne(Services::class, ['id' => 'service_id']);
-    }
-
-    /**
-     * Modes name from dictionary
-     * @return string
-     */
-    public function getModeName()
-    {
-        return self::$modesDictionary[$this->mode] ?: Yii::t('orders', 'search.mode.unknown');
-    }
-
-    /**
-     * Statuses name from dictionary
-     * @return string
-     */
-    public function getStatusName()
-    {
-        return self::$statusesDictionary[$this->status] ?: Yii::t('orders', 'search.status.unknown');
     }
 }

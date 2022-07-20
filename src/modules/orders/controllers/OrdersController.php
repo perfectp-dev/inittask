@@ -34,10 +34,10 @@ class OrdersController extends Controller
             'title' => Yii::t('orders', 'page.orders'),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'statuses' => OrderSearch::$statusesDictionary,
-            'allOrdersCount' => OrderSearch::allCount(),
-            'services' => ServiceSearch::listWithOrdersCounters(),
-            'modes' => OrderSearch::$modesDictionary,
+            'statuses' => $searchModel->statuses,
+            'allOrdersCount' => $dataProvider->totalCount,
+            'services' => $searchModel->servicesWithOrdersCount,
+            'modes' => $searchModel->modes,
             'saveURL' => array_merge(['save'], Yii::$app->request->queryParams),
         ]);
     }
@@ -67,10 +67,10 @@ class OrdersController extends Controller
         $model = $dataProvider->getModels();
         foreach ($model as $value) {
             $data .= $value->id .
-                ';' . $value->userFullName .
+                ';' . $value->user_full_name .
                 ';' . $value->link .
                 ';' . $value->quantity .
-                ';' . $value->service->name . '(' . $value->service->ordersCount . ')' .
+                ';' . $value->service_name . '(' . $value->service_orders_cnt . ')' .
                 ';' . $value->statusName .
                 ';' . $value->modeName .
                 ';' . Yii::$app->formatter->asDateTime($value->created_at, 'php:Y-m-d H:i:s') .
