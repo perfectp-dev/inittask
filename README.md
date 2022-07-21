@@ -19,8 +19,9 @@ git clone https://github.com/perfectp-dev/inittask.git .
 
 в `.env`:
 
-    - PORT_ON_LOCALHOST - настройте порт на localhost, на котором будет работать сервис.
-    - DB_DATABASE, DB_USER, DB_PASSWORD, DB_ROOT_PASSWORD -  настройки БД
+    - NGINX_PORT, PHPMYADMIN_PORT - настройки портов.
+    - CONTAINER_NGINX, CONTAINER_PHP, CONTAINER_MYSQL, CONTAINER_PHPMYADMIN - имена контейнеров 
+    - MYSQL_DATABASE, DB_USER, DB_PASSWORD, DB_ROOT_PASSWORD -  настройки БД
 
 3. далее, для сборки образов надо запустить `build-image.sh`
 4. после успешной сборки запустите контейнеры с помощю `run.sh`
@@ -30,4 +31,4 @@ git clone https://github.com/perfectp-dev/inittask.git .
 
 После этих действий сервис должен быть доступен по адресу http://localhost:8083/orders/
 
-Если изменяли порт в PORT_ON_LOCALHOST используйте его
+Если изменяли порт в NGINX_PORT используйте его вместо 8083
