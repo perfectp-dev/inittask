@@ -13,7 +13,11 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'action' => ['index', 'status' => $model->status],
         'method' => 'get',
-        'options' => ['class' => 'form-inline']
+        'options' => ['class' => 'form-inline'],
+        'fieldConfig' => [
+            'template' => "{input}",
+            'options' => ['tag' => false],
+        ],
     ]); ?>
 
     <div class="input-group">

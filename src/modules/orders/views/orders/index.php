@@ -14,7 +14,6 @@ use yii\grid\GridView;
 $this->title = $title;
 
 ?>
-<div class="orders-index">
     <ul class="nav nav-tabs p-b">
         <?= $this->render('_status', [
             'model' => $searchModel,
@@ -38,10 +37,11 @@ $this->title = $title;
         'tableOptions' => [
             'class' => 'table order-table'
         ],
+        'options' => ['tag' => false],
 
         'layout' => "{items}
             <div class='row'>
-                <div class='col-sm-8'>{pager}</div>
+                <div class='col-sm-8'><nav>{pager}</nav></div>
                 <div class='col-sm-4 pagination-counters'>{summary}</div>
             </div>",
 
@@ -49,9 +49,9 @@ $this->title = $title;
             (
                 "{begin} " . Yii::t('orders', 'search.summary.to') . " {end} " .
                 Yii::t('orders', 'search.summary.of') . " {totalCount}"
-            ) : "{totalCount}"
+            ) : "{totalCount}",
 
-        ,
+        'summaryOptions' => ['tag' => false],
 
         'columns' => [
 
@@ -64,13 +64,17 @@ $this->title = $title;
                 },
             ],
 
-            'link',
+            [
+                'attribute' => 'link',
+                'contentOptions' => ['class' => 'link'],
+            ],
             'quantity',
 
             [
                 'attribute' => 'service_id',
                 'header' => $servicesWidget,
                 'headerOptions' => ['class' => 'dropdown-th'],
+                'contentOptions' => ['class' => 'service',],
                 'value' => function ($model) {
                     return '<span class="label-id">' . $model->service_orders_cnt . '</span> ' . $model->service_name;
                 },
@@ -105,12 +109,11 @@ $this->title = $title;
     ]); ?>
 
 <div class="row">
-    <div class="col text-right">
+    <div class="col-sm-12 text-right">
         <?= Html::a(
             '<i class="glyphicon glyphicon-download"></i> ' . Yii::t('orders', 'search.savebtn'),
             $saveURL,
             ['class' => 'btn btn-default']
         )?>
     </div>
-</div>
 </div>
