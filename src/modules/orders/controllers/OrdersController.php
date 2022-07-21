@@ -1,50 +1,39 @@
 <?php
 
-namespace app\modules\orders\controllers;
+namespace orders\controllers;
 
 use Yii;
 use yii\web\Controller;
 use yii\web\HttpException;
-use app\modules\orders\models\OrderSearch;
-use app\modules\orders\models\ServiceSearch;
+use orders\models\OrderSearch;
 
 /**
- * DefaultController - .
+ * OrdersController - .
  */
 class OrdersController extends Controller
 {
     /**
      * Lists Orders.
      * @return string
-     * @throws HttpException if search parameters not valid
      */
     public function actionIndex()
     {
         $searchModel = new OrderSearch();
 
-        $searchModel->load($this->request->queryParams, '');
-
-        if (!$searchModel->validate()) {
-            $searchModel = new OrderSearch();
-        }
-
-        $dataProvider = $searchModel->search();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
             'title' => Yii::t('orders', 'page.orders'),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'statuses' => $searchModel->statuses,
             'allOrdersCount' => $dataProvider->totalCount,
-            'services' => $searchModel->servicesWithOrdersCount,
-            'modes' => $searchModel->modes,
             'saveURL' => array_merge(['save'], Yii::$app->request->queryParams),
         ]);
     }
 
     /**
      * Save Orders List.
-     * @throws HttpException if search parameters not valid
+     * @throws HttpException if saving error
      */
     public function actionSave()
     {
@@ -52,30 +41,12 @@ class OrdersController extends Controller
 
         $searchModel = new OrderSearch();
 
-        $searchModel->load($this->request->queryParams, '');
-
-        if (!$searchModel->validate()) {
-            $searchModel = new OrderSearch();
-        }
-
-        $dataProvider = $searchModel->search();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
         $dataProvider->pagination = false;
 
-        $data = implode(';', $searchModel->attributeLabels()) . "\r\n";
+        $data = $searchModel->toCSV($dataProvider);
 
-        $model = $dataProvider->getModels();
-        foreach ($model as $value) {
-            $data .= $value->id .
-                ';' . $value->user_full_name .
-                ';' . $value->link .
-                ';' . $value->quantity .
-                ';' . $value->service_name . '(' . $value->service_orders_cnt . ')' .
-                ';' . $value->statusName .
-                ';' . $value->modeName .
-                ';' . Yii::$app->formatter->asDateTime($value->created_at, 'php:Y-m-d H:i:s') .
-                "\r\n";
-        }
         Yii::$app->response->sendContentAsFile($data, 'export_' . date('d.m.Y') . '.csv');
     }
 }

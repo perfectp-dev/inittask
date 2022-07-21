@@ -3,8 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\orders\models\OrderSearch */
-/* @var $statuses array */
+/* @var $model orders\models\OrderSearch */
 
 $baseLink = [
     'index',
@@ -17,7 +16,7 @@ $baseLink = [
         <?= Html::a(Yii::t('orders', 'search.status.all'), $baseLink) ?>
     </li>
 
-<?php foreach ($statuses as $statusID => $status): ?>
+<?php foreach ($model->statuses as $statusID => $status): ?>
     <li<?= (isset($model->status) && $model->status == $statusID ? ' class="active"' : '') ?>>
         <?= Html::a($status, array_merge($baseLink, ['status' => $statusID])) ?>
     </li>

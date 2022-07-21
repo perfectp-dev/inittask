@@ -11,6 +11,7 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@orders' => '@app/modules/orders/',
     ],
     'components' => [
         'request' => [
@@ -65,7 +66,8 @@ $config = [
     ],
     'modules' => [
         'orders' => [
-            'class' => 'app\modules\orders\Module',
+            'class' => 'orders\Module',
+            'defaultRoute' => 'orders/index',
         ],
     ],
     'params' => $params,

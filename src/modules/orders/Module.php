@@ -1,17 +1,18 @@
 <?php
 
-namespace app\modules\orders;
+namespace orders;
+
+use yii\base\Module as BaseModule;
 
 /**
  * orders module definition class
  */
-class Module extends \yii\base\Module
+class Module extends BaseModule
 {
     /**
-     * {@inheritdoc}
+     * {@inheritdoc
      */
-    public $controllerNamespace = 'app\modules\orders\controllers';
-    public $defaultRoute = 'orders/index';
+    public $controllerNamespace = 'orders\controllers';
 
     /**
      * {@inheritdoc}

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\orders\models;
+namespace orders\models;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -31,6 +31,10 @@ class Orders extends ActiveRecord
     const STATUS_CANCELED = 3;
     const STATUS_ERROR = 4;
 
+    /**
+     * Modes dictionary
+     * @return array
+     */
     public function getModes()
     {
         return [
@@ -39,6 +43,10 @@ class Orders extends ActiveRecord
         ];
     }
 
+    /**
+     * Statuses dictionary
+     * @return array
+     */
     public function getStatuses()
     {
         return [

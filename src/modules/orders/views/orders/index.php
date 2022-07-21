@@ -5,13 +5,9 @@ use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $title string */
-/* @var $searchModel app\modules\orders\models\OrderSearch */
+/* @var $searchModel orders\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $statuses array */
 /* @var $allOrdersCount int */
-/* @var $services array */
-/* @var $modes array */
-/* @var $pageSize int */
 /* @var $saveURL array*/
 
 
@@ -22,20 +18,17 @@ $this->title = $title;
     <ul class="nav nav-tabs p-b">
         <?= $this->render('_status', [
             'model' => $searchModel,
-            'statuses' => $statuses,
         ]) ?>
         <?= $this->render('_search', ['model' => $searchModel]); ?>
     </ul>
 
     <?php $servicesWidget = $this->render('_services', [
         'model' => $searchModel,
-        'services' => $services,
         'allOrdersCount' => $allOrdersCount,
     ]); ?>
 
     <?php $modesWidget = $this->render('_modes', [
         'model' => $searchModel,
-        'modes' => $modes,
     ]); ?>
 
     <?= GridView::widget([
@@ -104,8 +97,8 @@ $this->title = $title;
                 'attribute' => 'created_at',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return '<span class="nowrap">' . $model->createdDateOnly . '</span>' .
-                        '<span class="nowrap">' . $model->createdTimeOnly . '</span>';
+                    return '<span class="nowrap">' . $model->createdDateString . '</span>' .
+                        '<span class="nowrap">' . $model->createdTimeString . '</span>';
                 },
             ],
         ],

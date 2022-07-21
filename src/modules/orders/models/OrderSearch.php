@@ -1,11 +1,13 @@
 <?php
 
-namespace app\modules\orders\models;
+namespace orders\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\base\InvalidConfigException;
 
 /**
  * OrderSearch - orders list with filters
@@ -65,11 +67,35 @@ class OrderSearch extends Orders
     }
 
     /**
+     * Related user
+     * @return ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * Related Service
+     * @return ActiveQuery
+     */
+    public function getService()
+    {
+        return $this->hasOne(Services::class, ['id' => 'service_id']);
+    }
+
+    /**
      * Creates data provider instance with search query applied
      * @return ActiveDataProvider
      */
-    public function search()
+    public function search($params)
     {
+        $this->load($params, '');
+
+        if (!$this->validate()) {
+            $searchModel = new self();
+        }
+
         $query = self::find()->alias('o')
             ->select([
                 'o.*',
@@ -97,19 +123,17 @@ class OrderSearch extends Orders
 
         $query = $query->leftJoin(['s' => $subQuery], 's.id = o.service_id');
 
-        $dataProvider = new ActiveDataProvider([
+        return new ActiveDataProvider([
             'query' => $query,
             'sort' => false,
             'pagination' => [
                 'pageSize' => self::PAGE_SIZE,
             ],
         ]);
-
-        return $dataProvider;
     }
 
     /**
-     * @return array|\yii\db\ActiveRecord[]
+     * @return array|ActiveRecord[]
      */
     public function getServicesWithOrdersCount()
     {
@@ -121,9 +145,22 @@ class OrderSearch extends Orders
         $query = $this->addFilters($query, true);
 
         $query->groupBy('service_id')
-            ->orderBy(['orders_cnt'=>SORT_DESC]);
+            ->orderBy(['orders_cnt' => SORT_DESC]);
 
         return $query->all();
+    }
+
+    /**
+     * @return int
+     */
+    public function getAllFilteredWithoutServiceOrdersCount()
+    {
+        $query = self::find()->alias('o')
+            ->innerJoin('users', 'users.id = o.user_id');
+
+        $query = $this->addFilters($query, true);
+
+        return $query->count();
     }
 
     /**
@@ -166,9 +203,9 @@ class OrderSearch extends Orders
     /**
      * Date of created_at
      * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
-    public function getCreatedDateOnly()
+    public function getCreatedDateString()
     {
         return Yii::$app->formatter->asDateTime($this->created_at, 'php:Y-m-d');
     }
@@ -176,29 +213,21 @@ class OrderSearch extends Orders
     /**
      * Time of created_at
      * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
-    public function getCreatedTimeOnly()
+    public function getCreatedTimeString()
     {
         return Yii::$app->formatter->asDateTime($this->created_at, 'php:H:i:s');
     }
 
     /**
-     * Related user
-     * @return \yii\db\ActiveQuery
+     * Full date of created_at
+     * @return string
+     * @throws InvalidConfigException
      */
-    public function getUser()
+    public function getCreatedString()
     {
-        return $this->hasOne(Users::class, ['id' => 'user_id']);
-    }
-
-    /**
-     * Related Service
-     * @return \yii\db\ActiveQuery
-     */
-    public function getService()
-    {
-        return $this->hasOne(Services::class, ['id' => 'service_id']);
+        return Yii::$app->formatter->asDateTime($this->created_at, 'php:Y-m-d H:i:s');
     }
 
 
@@ -218,5 +247,30 @@ class OrderSearch extends Orders
     public function getStatusName()
     {
         return $this->statuses[$this->status] ?: Yii::t('orders', 'search.status.unknown');
+    }
+
+    /**
+     * Prepare data for save as CSV
+     * @param $dataProvider
+     * @return string
+     */
+    public function toCSV($dataProvider)
+    {
+        $model = $dataProvider->getModels();
+
+        $data = implode(';', $this->attributeLabels()) . "\r\n";
+
+        foreach ($model as $value) {
+            $data .= $value->id .
+                ';' . $value->user_full_name .
+                ';' . $value->link .
+                ';' . $value->quantity .
+                ';' . $value->service_name . '(' . $value->service_orders_cnt . ')' .
+                ';' . $value->statusName .
+                ';' . $value->modeName .
+                ';' . $value->createdString .
+                "\r\n";
+        }
+        return $data;
     }
 }

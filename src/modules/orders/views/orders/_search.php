@@ -2,11 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\modules\orders\models\OrderSearch;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\orders\models\OrderSearch */
 /* @var $form yii\widgets\ActiveForm */
+/* @var $model orders\models\OrderSearch */
 ?>
 
 <li class="pull-right custom-search">
@@ -32,9 +31,9 @@ use app\modules\orders\models\OrderSearch;
                     $model,
                     'search_type',
                     [
-                        OrderSearch::BY_ORDER_ID => Yii::t('orders', 'search.type.orderid'),
-                        OrderSearch::BY_LINK => Yii::t('orders', 'search.type.link'),
-                        OrderSearch::BY_USERNAME => Yii::t('orders', 'search.type.username'),
+                        $model::BY_ORDER_ID => Yii::t('orders', 'search.type.orderid'),
+                        $model::BY_LINK => Yii::t('orders', 'search.type.link'),
+                        $model::BY_USERNAME => Yii::t('orders', 'search.type.username'),
                     ],
                     ['class' => 'form-control search-select']
                 ) ?>

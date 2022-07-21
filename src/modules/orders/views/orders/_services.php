@@ -5,8 +5,7 @@
 
 use yii\bootstrap\ButtonDropdown;
 
-/* @var $model app\modules\orders\models\OrderSearch */
-/* @var $services array */
+/* @var $model orders\models\OrderSearch */
 /* @var $allOrdersCount int */
 
 $baseLink = [
@@ -19,13 +18,12 @@ $baseLink = [
 
 $servicesItems = [
     [
-        'label' => '<span class="label-id">' . $allOrdersCount . '</span> ' .
-            Yii::t('orders', 'All'),
+        'label' => Yii::t('orders', 'All') . ' (' . $model->allFilteredWithoutServiceOrdersCount . ')',
         'url' => $baseLink,
     ],
 ];
 
-foreach ($services as $service) {
+foreach ($model->servicesWithOrdersCount as $service) {
     $servicesItems[] = [
         'label' => '<span class="label-id">' . $service['orders_cnt'] . '</span> ' . $service['service_name'],
         'url' => array_merge($baseLink, ['service_id' => $service['service_id']])
