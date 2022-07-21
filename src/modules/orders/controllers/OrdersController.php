@@ -27,7 +27,7 @@ class OrdersController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'allOrdersCount' => $dataProvider->totalCount,
-            'saveURL' => array_merge(['save'], Yii::$app->request->queryParams),
+            'saveURL' => array_merge(['save'], $this->request->queryParams),
         ]);
     }
 

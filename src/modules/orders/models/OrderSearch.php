@@ -48,6 +48,7 @@ class OrderSearch extends Orders
             [['search_type'], 'integer'],
             [['search_type'], 'in', 'range' => [self::BY_ORDER_ID, self::BY_LINK, self::BY_USERNAME]],
             ['search', 'safe'],
+            ['service_id', 'exist', 'targetClass' => Services::class, 'targetAttribute' => 'id']
         ];
     }
 
@@ -92,8 +93,10 @@ class OrderSearch extends Orders
     {
         $this->load($params, '');
 
-        if (!$this->validate()) {
-            $searchModel = new self();
+        if(!$this->validate()) {
+            foreach ($this->errors as $index => $error) {
+                unset($this->{$index});
+            }
         }
 
         $query = self::find()->alias('o')
